@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+
+use strict;
+use FindBin;
+use lib "$FindBin::RealBin/../perl5";
+###LINE_FOR_BREW_CONDA###
+use Data::Dumper;
+use Getopt::ArgParse;
+use Path::Tiny;
+
+our $TOOLNAME = path($0)->basename;
+our $VERSION = '0.1';
+
+my $ap = Getopt::ArgParse->new_parser(
+  prog        => $TOOLNAME,
+  description => 'FASTQ file quality control reports',
+  epilog      => "Written by Torsten Seemann - http://github.com/tseemann/$TOOLNAME",
+);
+$ap->add_arg('--version', '-V', type=>'Bool',
+  help => "Print version and exit",
+);
+$ap->add_arg('--quiet', '-q', type=>'Bool',
+  help => "Don't output anything to screen",
+);
+$ap->add_arg('--threads', '-t', type=>'Scalar', default=>1,
+  help => "Number of CPU threads to use",
+);
+$ap->add_arg('--outdir', '-o', type=>'Scalar', required=>0,
+  help => "Output folder for results",
+);
+
+my $arg = $ap->parse_args(); # uses @ARGV
+#print Dumper($arg);
+my $cc = $arg->current_command || 'help';
+print STDERR "[$TOOLNAME] current_command = $cc\n";
+
